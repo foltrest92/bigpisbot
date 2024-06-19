@@ -31,3 +31,9 @@ class SizedDAO(BaseDAO):
                 query = select(Size.__table__.columns).order_by(desc(Size.size)).limit(10)
             result = await session.execute(query)
             return result.mappings().all()
+    
+    @classmethod
+    async def reset(cls):
+        async with async_session_maker() as session:
+            query = update(Size).value(isUpdated=False)
+            await session.execute(query)

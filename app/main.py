@@ -5,6 +5,8 @@ import asyncio
 from aiogram import Bot, Dispatcher, types
 from app.config import settings
 from app.routers.start import router as start_router
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from app import planned
 
 async def start_bot():
     dp = Dispatcher()
@@ -20,6 +22,10 @@ async def start_bot():
         types.BotCommand(command='help', description='Помощь'),
         types.BotCommand(command='buy', description='Покупка доп. попытки')
     ]
+
+    scheduler = AsyncIOScheduler()
+    scheduler.add_job(planned.reset, 'cron', hour=7, minute=30)
+
     await bot.set_my_commands(commands, types.BotCommandScopeDefault())
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
