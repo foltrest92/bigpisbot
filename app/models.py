@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Integer, DateTime, String, func, BigInteger
+from sqlalchemy import Boolean, Column, Integer, DateTime, String, func, BigInteger, ForeignKey
 from app.database import Base
 
 
@@ -18,3 +18,10 @@ class Promo(Base):
     promo_id = Column(Integer, primary_key=True)
     code = Column(String, unique=True, nullable=False)
     uses = Column(Integer, nullable=False)
+
+class PromoUsing(Base):
+    __tablename__ = 'promos_using'
+
+    promo_id = Column(Integer,primary_key=True, nullable=False)
+    user_id = Column(BigInteger, primary_key=True, nullable=False)
+    is_used = Column(Boolean, nullable=False)

@@ -7,7 +7,7 @@ import random
 from aiogram import Router, types
 from aiogram.filters import Command, CommandObject
 
-from app.daos import PromoDAO, SizedDAO
+from app.daos import PromoDAO, PromoUsingDAO, SizedDAO
 import matplotlib.pyplot as plt
 
 
@@ -56,8 +56,10 @@ async def dick(message: types.Message):
     if row is None:
         logging.debug('New user in chat')
         row = await SizedDAO.add(chat_id=message.chat.id, user_id=message.from_user.id)
-
-    if row.isUpdated:
+    using_promo = await PromoUsingDAO.use(message.from_user.id)
+    if using_promo:
+        logging.debug("Used promo for user " + str(message.from_user.id) + " chat "+ str(message.chat.id))
+    elif row.isUpdated:
         tops = await SizedDAO.find_all(chat_id = message.chat.id)
         number = 1
         for key, top in enumerate(tops):
@@ -70,7 +72,10 @@ async def dick(message: types.Message):
     
     step = variants[random.randint(0, len(variants)-1)]
     size = row.size + step
-    await SizedDAO.update(chat_id=message.chat.id, user_id=message.from_user.id, size = size, isUpdated = True, name = message.from_user.first_name)
+    if using_promo:
+        await SizedDAO.update(chat_id=message.chat.id, user_id=message.from_user.id, size = size, name = message.from_user.first_name)
+    else:
+        await SizedDAO.update(chat_id=message.chat.id, user_id=message.from_user.id, size = size, isUpdated = True, name = message.from_user.first_name)
 
     tops = await SizedDAO.find_all(chat_id = message.chat.id)
     number = 1
@@ -85,6 +90,7 @@ async def dick(message: types.Message):
     elif step < 0:
         await message.answer(text=f'<a href="{message.from_user.url}">{message.from_user.first_name}</a>, твой писюн сократился на {step} см.\nСейчас он равен {size} см.\n Ты занимаешь {number} место в топе.\nСледующая попытка завтра!', parse_mode='HTML')
     
+
 
 @router.message(Command('top'))
 async def top(message: types.Message):
@@ -143,11 +149,11 @@ async def promo(message: types.Message, command: CommandObject):
     if not command.args:
         await message.answer('Нужно ввести промокод\n/promo ПРОМОКОД')
         return
-    is_used = await PromoDAO.use(command.args.strip())
+    is_used = await PromoDAO.use(command.args.strip(), message.from_user.id)
     if is_used:
         await message.answer('Промокод применен, введите /dick в беседе')
     else:
-        await message.answer('Промокод не существует или закончился')
+        await message.answer('Промокод не существует, уже использовал или закончился')
 
 
 @router.message(Command('stats'))
