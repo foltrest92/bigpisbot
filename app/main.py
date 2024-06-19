@@ -40,6 +40,11 @@ async def start_bot():
     scheduler = AsyncIOScheduler()
     scheduler.add_job(planned.reset, 'cron', hour=7, minute=30)
     logging.info('Job \'reset\' added')
+    scheduler.add_job(planned.clean_figs, 'cron', minute=59)
+    logging.info('Job \'clean_figs\' added')
+    scheduler.start()
+    logging.info('Jobs started')
+
     await bot.set_my_commands(commands, types.BotCommandScopeDefault())
     logging.info('commands setted')
     await bot.delete_webhook(drop_pending_updates=True)
