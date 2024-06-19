@@ -1,7 +1,7 @@
 import logging
 from sqlalchemy import desc, select, update, and_
 from app.dao.base import BaseDAO
-from app.models import Size
+from app.models import Promo, Size
 from app.database import async_session_maker
 
 class SizedDAO(BaseDAO):
@@ -40,5 +40,25 @@ class SizedDAO(BaseDAO):
     async def reset(cls):
         logging.debug('SizedDAO: RESET')
         async with async_session_maker() as session:
-            query = update(Size).value(isUpdated=False)
+            query = update(Size).values(isUpdated=False)
             await session.execute(query)
+            await session.commit()
+
+class PromoDAO(BaseDAO):
+    model = Promo
+    uid = Promo.promo_id
+
+    @classmethod
+    async def use(cls, code: str) -> bool:
+        logging.debug('Using promocode '+ code)
+        promo =  await cls.find_one_or_none(code=code)
+        if promo and promo.uses>0:
+            async with async_session_maker() as session:
+                query = update(Promo).where(Promo.code == code).values(uses=promo.uses-1)
+                await session.execute(query)
+                await session.commit()
+                logging.debug('Promocode '+ str(code) + ' used, remains: '+ str(promo.uses-1))
+            return True
+        logging.debug('Promocode didnt use')
+        return False
+    

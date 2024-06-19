@@ -39,7 +39,7 @@ class BaseDAO:
     
     @classmethod
     async def add(cls, **data):
-        logging.debug('BaseDAO: add: data:' + str(filter_by))
+        logging.debug('BaseDAO: add: data:' + str(data))
         async with async_session_maker() as session:
             query = insert(cls.model).values(**data).returning(cls.model)
             result = await session.execute(query)

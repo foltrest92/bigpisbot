@@ -11,3 +11,10 @@ class Size(Base):
     last_update = Column(DateTime, onupdate=func.now(), server_default=func.now())
     isUpdated = Column(Boolean, default=False)
     name = Column(String)
+
+class Promo(Base):
+    __tablename__ = 'promos'
+
+    promo_id = Column(Integer, primary_key=True)
+    code = Column(String, unique=True, nullable=False)
+    uses = Column(Integer, nullable=False)
