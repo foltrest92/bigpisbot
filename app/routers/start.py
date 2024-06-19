@@ -180,5 +180,6 @@ async def stats(message: types.Message, ):
         plt.title('Статистика '+ message.chat.title)
         # plt.legend(parts_labels, loc='upper right')
         plt.savefig(filename)
+        plt.close()
      
     await message.answer_photo(types.FSInputFile(filename))
