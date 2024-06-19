@@ -2,6 +2,10 @@ from datetime import datetime
 import os, sys
 sys.path.append(os.getcwd())
 
+from dotenv import load_dotenv
+
+load_dotenv(override=True)
+
 import locale
 import logging
 

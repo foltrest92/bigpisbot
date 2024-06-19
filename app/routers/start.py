@@ -1,11 +1,14 @@
 
 
+from datetime import datetime
 import logging
+import os
 import random
 from aiogram import Router, types
 from aiogram.filters import Command
 
 from app.daos import SizedDAO
+import matplotlib.pyplot as plt
 
 
 
@@ -135,3 +138,30 @@ async def help(message: types.Message):
 async def promo(message: types.Message):
     logging.debug('msg from '+str(message.from_user.id)+' in '+str(message.chat.id)+':'+message.text)
     await message.answer('Промо пока нет')
+
+
+@router.message(Command('stats'))
+async def stats(message: types.Message):
+    logging.debug('msg from '+str(message.from_user.id)+' in '+str(message.chat.id)+':'+message.text)
+    if message.chat.id > 0:
+        await message.answer('Бот работает только в чате')
+        return
+    
+    msg = 'Топ 10 игроков:\n\n'
+
+    top = await SizedDAO.get_top(chat_id=message.chat.id)
+    parts = []
+    parts_labels = []
+    for row in top:
+        if row.size > 0:
+            parts.append(row.size)
+            parts_labels.append(f'{row.name} {row.size} см')
+    
+    filename = f"figs/{message.chat.id}_{datetime.now().strftime('%d%m%y_%H%M')}.png"
+    if not os.path.exists(filename):
+        plt.pie(parts, labels=parts_labels)
+        plt.title('Статистика '+ message.chat.title)
+        plt.legend(parts_labels)
+        plt.savefig(filename)
+     
+    await message.answer_photo(types.FSInputFile(filename))
