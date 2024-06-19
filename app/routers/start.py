@@ -1,5 +1,6 @@
 
 
+import logging
 import random
 from aiogram import Router, types
 from aiogram.filters import Command
@@ -35,6 +36,7 @@ variants = [-10,
 
 @router.message(Command('start'))
 async def hello(message: types.Message):
+    logging.debug('msg from '+str(message.from_user.id)+' in '+str(message.chat.id)+':'+message.text)
     kb = [
         [types.InlineKeyboardButton(text='Добавить бота в чат', url='https://t.me/bigpisbot?startgroup=start')]
     ]
@@ -42,12 +44,14 @@ async def hello(message: types.Message):
 
 @router.message(Command('dick'))
 async def dick(message: types.Message):
+    logging.debug('msg from '+str(message.from_user.id)+' in '+str(message.chat.id)+':'+message.text)
     if message.chat.id > 0:
         await message.answer('Бот работает только в чате')
         return
     
     row = await SizedDAO.find_one_or_none(chat_id=message.chat.id, user_id=message.from_user.id)
     if row is None:
+        logging.debug('New user in chat')
         row = await SizedDAO.add(chat_id=message.chat.id, user_id=message.from_user.id)
 
     if row.isUpdated:
@@ -81,6 +85,7 @@ async def dick(message: types.Message):
 
 @router.message(Command('top'))
 async def top(message: types.Message):
+    logging.debug('msg from '+str(message.from_user.id)+' in '+str(message.chat.id)+':'+message.text)
     if message.chat.id > 0:
         await message.answer('Бот работает только в чате')
         return
@@ -95,6 +100,7 @@ async def top(message: types.Message):
 
 @router.message(Command('top'))
 async def top(message: types.Message):
+    logging.debug('msg from '+str(message.from_user.id)+' in '+str(message.chat.id)+':'+message.text)
     if message.chat.id > 0:
         await message.answer('Бот работает только в чате')
         return
@@ -109,6 +115,7 @@ async def top(message: types.Message):
 
 @router.message(Command('global_top'))
 async def global_top(message: types.Message):
+    logging.debug('msg from '+str(message.from_user.id)+' in '+str(message.chat.id)+':'+message.text)
     
     msg = 'Топ 10 игроков:\n\n'
 
@@ -120,9 +127,11 @@ async def global_top(message: types.Message):
 
 @router.message(Command('help'))
 async def help(message: types.Message):
+    logging.debug('msg from '+str(message.from_user.id)+' in '+str(message.chat.id)+':'+message.text)
     await message.answer('Команды бота:\n/dick — Вырастить/уменьшить пипису\n/top — Топ 10 пипис чата\n/stats — Статистика в виде картинки\n/global_top — Глобальный топ 10 игроков\n/buy — Покупка доп. попыток\n\nКонтакты:')
 
 
 @router.message(Command('promo'))
 async def promo(message: types.Message):
+    logging.debug('msg from '+str(message.from_user.id)+' in '+str(message.chat.id)+':'+message.text)
     await message.answer('Промо пока нет')
