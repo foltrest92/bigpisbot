@@ -161,7 +161,7 @@ async def stats(message: types.Message):
     if not os.path.exists(filename):
         plt.pie(parts, labels=parts_labels)
         plt.title('Статистика '+ message.chat.title)
-        plt.legend(parts_labels)
+        # plt.legend(parts_labels, loc='upper right')
         plt.savefig(filename)
      
     await message.answer_photo(types.FSInputFile(filename))
