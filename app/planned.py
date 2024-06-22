@@ -1,16 +1,18 @@
-from datetime import datetime
+import asyncio
 import logging
 import os
-from app.daos import SizedDAO
-import asyncio
+from datetime import datetime
+
+from app.dao.sizes import SizesDAO
 
 
 async def reset():
+    # Ежедневный сброс счетчика роста
     while True:
         logging.info("Trying to reset")
         try:
             logging.info('Reset')
-            await SizedDAO.reset()
+            await SizesDAO.reset()
         except Exception as e:
             logging.error(e)
             logging.error("Unable to reset. Waiting 60 secounds...")
@@ -21,6 +23,7 @@ async def reset():
             break
 
 async def clean_figs():
+    # Очистка папки с картинками статистики. Не удаляется за текущий час.
     logging.info('Clean figs')
     num = 0
     now_hour = datetime.now().hour

@@ -4,6 +4,8 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    VERSION: str = '1.0.5'
+
     MODE: Literal['PROD', 'DEV', 'TEST']
 
     PROD_BOT_TOKEN: str

@@ -1,8 +1,9 @@
-from sqlalchemy import Boolean, Column, Integer, DateTime, String, func, BigInteger, ForeignKey
+from sqlalchemy import Boolean, Column, Integer, DateTime, String, func, BigInteger
 from app.database import Base
 
 
 class Size(Base):
+    # Таблица с размерами
     __tablename__ = 'sizes'
 
     chat_id = Column(BigInteger, primary_key=True)
@@ -13,6 +14,7 @@ class Size(Base):
     name = Column(String)
 
 class Promo(Base):
+    # Таблица с промокодами
     __tablename__ = 'promos'
 
     promo_id = Column(Integer, primary_key=True)
@@ -20,6 +22,7 @@ class Promo(Base):
     uses = Column(Integer, nullable=False)
 
 class PromoUsing(Base):
+    # Таблица с использованием промокодов
     __tablename__ = 'promos_using'
 
     promo_id = Column(Integer,primary_key=True, nullable=False)
