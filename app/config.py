@@ -6,7 +6,10 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     MODE: Literal['PROD', 'DEV', 'TEST']
 
-    BOT_TOKEN: str
+    PROD_BOT_TOKEN: str
+    DEV_BOT_TOKEN: str
+    TEST_BOT_TOKEN: str
+    BOT_TOKEN: str = None
 
     ADMIN_TELEGRAM_ID: int
 
