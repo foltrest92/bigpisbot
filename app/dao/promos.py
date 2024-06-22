@@ -34,6 +34,15 @@ class PromoDAO(BaseDAO):
             return True
         logging.debug('Promocode didnt use')
         return False
+    
+    @classmethod
+    async def update(cls, code: str, uses: int):
+        logging.info('Update promo'+code)
+        async with async_session_maker() as session:
+            query = update(Promo).where(Promo.code == code).values(uses=uses)
+            await session.execute(query)
+            await session.commit()
+            logging.debug('Promocode updated')
 
     
 class PromoUsingDAO(BaseDAO):

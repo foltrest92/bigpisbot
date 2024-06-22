@@ -1,6 +1,5 @@
 import logging
-import types
-from aiogram import Router
+from aiogram import Router, types
 from aiogram.filters import Command, CommandObject
 
 from app.dao.promos import PromoDAO

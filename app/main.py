@@ -28,6 +28,7 @@ from app.routers.grow import router as grow_router
 from app.routers.tops import router as tops_router
 from app.routers.promo import router as promo_router
 from app.routers.help import router as help_router
+from app.routers.admin import router as admin_router
 
 
 async def start_bot():
@@ -40,6 +41,7 @@ async def start_bot():
     dp.include_router(tops_router)
     dp.include_router(promo_router)
     dp.include_router(help_router)
+    dp.include_router(admin_router)
 
     commands = [
         types.BotCommand(command='dick', description='Вырастить пипису'),
