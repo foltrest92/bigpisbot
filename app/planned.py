@@ -2,11 +2,23 @@ from datetime import datetime
 import logging
 import os
 from app.daos import SizedDAO
+import asyncio
 
 
 async def reset():
-    logging.info('Reset')
-    await SizedDAO.reset()
+    while True:
+        logging.info("Trying to reset")
+        try:
+            logging.info('Reset')
+            await SizedDAO.reset()
+        except Exception as e:
+            logging.error(e)
+            logging.error("Unable to reset. Waiting 60 secounds...")
+            await asyncio.sleep(60)
+            continue
+        else:
+            logging.info('Resetted')
+            break
 
 async def clean_figs():
     logging.info('Clean figs')
