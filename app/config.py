@@ -8,6 +8,7 @@ class Settings(BaseSettings):
 
     BOT_TOKEN: str
 
+    ADMIN_TELEGRAM_ID: int
 
     DB_HOST: str
     DB_PORT: int
