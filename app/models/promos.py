@@ -1,17 +1,7 @@
-from sqlalchemy import Boolean, Column, Integer, DateTime, String, func, BigInteger
+from sqlalchemy import BigInteger, Boolean, Column, Integer, String
+
 from app.database import Base
 
-
-class Size(Base):
-    # Таблица с размерами
-    __tablename__ = 'sizes'
-
-    chat_id = Column(BigInteger, primary_key=True)
-    user_id = Column(BigInteger, primary_key=True)
-    size = Column(Integer, default=0)
-    last_update = Column(DateTime, onupdate=func.now(), server_default=func.now())
-    isUpdated = Column(Boolean, default=False)
-    name = Column(String)
 
 class Promo(Base):
     # Таблица с промокодами

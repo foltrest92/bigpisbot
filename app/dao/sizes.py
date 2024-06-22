@@ -2,8 +2,8 @@ import logging
 
 from sqlalchemy import and_, desc, select, update
 
-from app.dao.base import BaseDAO
-from app.models import Size
+from app.basedao import BaseDAO
+from app.models.sizes import Size
 from app.database import async_session_maker
 
 

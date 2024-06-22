@@ -2,8 +2,8 @@ import logging
 
 from sqlalchemy import and_, insert, update
 
-from app.dao.base import BaseDAO
-from app.models import Promo, PromoUsing
+from app.basedao import BaseDAO
+from app.models.promos import Promo, PromoUsing
 from app.database import async_session_maker
 
 
