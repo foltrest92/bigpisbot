@@ -9,27 +9,21 @@ from app.dao.sizes import SizesDAO
 router = Router()
 
 
-variants = [-10,
-            -9, 
-            -8,
-            -7, -7, 
-            -6, -6,
-            -5, -5,
-            -4, -4, -4,
-            -3, -3, -3,
-            -2, -2, -2,
-            -1, -1, -1,
-            0,
+variants = [-5,
+            -4, -4,
+            -3, -3,
+            -2, -2,
+            -1, -1,
             1, 1, 1, 1, 1,
             2, 2, 2, 2, 2, 2,
             3, 3, 3, 3, 3, 3, 3,
             4, 4, 4, 4, 4, 4, 4, 4,
             5, 5, 5, 5, 5, 5, 5, 5, 
             6, 6, 6, 6, 6, 6, 6, 6,
-            7, 7, 7, 7, 7, 7,
-            8, 8, 8, 8,
-            9, 9, 9,
-            10, 10]
+            7, 7, 7, 7, 7, 7, 7,
+            8, 8, 8, 8, 8, 
+            9, 9, 9, 9,
+            10, 10, 10]
 
 @router.message(Command('dick'))
 async def dick(message: types.Message):
@@ -56,7 +50,7 @@ async def dick(message: types.Message):
         await message.answer(text=f'<a href="{message.from_user.url}">{message.from_user.first_name}</a>, ты уже играл.\nСейчас он равен {row.size} см.\nТы занимаешь {number} место в топе.\nСледующая попытка завтра.', parse_mode='HTML')
         return
     
-    step = variants[random.randint(0, len(variants)-1)]
+    step = random.choice(variants)
     size = row.size + step
     if using_promo:
         await SizesDAO.update(chat_id=message.chat.id, user_id=message.from_user.id, size = size, name = message.from_user.first_name)
@@ -74,4 +68,4 @@ async def dick(message: types.Message):
     if step >= 0:
         await message.answer(text=f'<a href="{message.from_user.url}">{message.from_user.first_name}</a>, твой писюн вырос на {step} см.\nСейчас он равен {size} см.\nТы занимаешь {number} место в топе.\nСледующая попытка завтра!', parse_mode='HTML')
     elif step < 0:
-        await message.answer(text=f'<a href="{message.from_user.url}">{message.from_user.first_name}</a>, твой писюн сократился на {step} см.\nСейчас он равен {size} см.\n Ты занимаешь {number} место в топе.\nСледующая попытка завтра!', parse_mode='HTML')
+        await message.answer(text=f'<a href="{message.from_user.url}">{message.from_user.first_name}</a>, твой писюн сократился на {step*(-1)} см.\nСейчас он равен {size} см.\n Ты занимаешь {number} место в топе.\nСледующая попытка завтра!', parse_mode='HTML')
