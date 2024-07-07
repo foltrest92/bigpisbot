@@ -1,5 +1,5 @@
 import logging
-from sqlalchemy import insert, select
+from sqlalchemy import insert, select, update
 
 from app.database import async_session_maker
 
@@ -29,6 +29,14 @@ class BaseDAO:
         logging.debug('BaseDAO: add: data:' + str(data))
         async with async_session_maker() as session:
             query = insert(cls.model).values(**data).returning(cls.model)
+            result = await session.execute(query)
+            await session.commit()
+            return result.scalar_one()
+    
+    @classmethod
+    async def update(cls, model_id: int, **data):
+        async with async_session_maker() as session:
+            query = update(cls.model).where(cls.uid == model_id).values(**data).returning(cls.model)
             result = await session.execute(query)
             await session.commit()
             return result.scalar_one()

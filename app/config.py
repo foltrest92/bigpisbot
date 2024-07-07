@@ -33,6 +33,11 @@ class Settings(BaseSettings):
     DEV_DB_PASS: str
     DEV_DB_NAME: str
 
+    OFERTA_URL: str
+    DEV_PAYMENT_TOKEN: str
+    PROD_PAYMENT_TOKEN: str
+    PAYMENT_TOKEN: str
+
 
 
     class Config:

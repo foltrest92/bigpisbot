@@ -3,6 +3,7 @@ import random
 from aiogram import Router, types
 from aiogram.filters import Command
 
+from app.dao.buy import BuyDAO
 from app.dao.promos import PromoUsingDAO
 from app.dao.sizes import SizesDAO
 
@@ -36,10 +37,15 @@ async def dick(message: types.Message):
     if row is None:
         logging.debug('New user in chat')
         row = await SizesDAO.add(chat_id=message.chat.id, user_id=message.from_user.id)
-    using_promo = await PromoUsingDAO.use(message.from_user.id)
+    using_bought = await BuyDAO.use(message.from_user.id)
+    if using_bought:
+        logging.debug("Used bought for user " + str(message.from_user.id) + " chat "+ str(message.chat.id))
+        using_promo = False
+    else:
+        using_promo = await PromoUsingDAO.use(message.from_user.id)
     if using_promo:
         logging.debug("Used promo for user " + str(message.from_user.id) + " chat "+ str(message.chat.id))
-    elif row.isUpdated:
+    elif row.isUpdated and not using_bought:
         tops = await SizesDAO.find_all(chat_id = message.chat.id)
         number = 1
         for key, top in enumerate(tops):
@@ -52,7 +58,7 @@ async def dick(message: types.Message):
     
     step = random.choice(variants)
     size = row.size + step
-    if using_promo:
+    if using_promo or using_bought:
         await SizesDAO.update(chat_id=message.chat.id, user_id=message.from_user.id, size = size, name = message.from_user.first_name)
     else:
         await SizesDAO.update(chat_id=message.chat.id, user_id=message.from_user.id, size = size, isUpdated = True, name = message.from_user.first_name)
